@@ -2,7 +2,7 @@ const setUpSocket = (receiveMessage) => {
   let socket;
 
   const connectSocket = () => {
-    socket = new WebSocket('ws://st-chat.shas.tel');
+    socket = new WebSocket('wss://wssproxy.herokuapp.com/');
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data).reverse();
