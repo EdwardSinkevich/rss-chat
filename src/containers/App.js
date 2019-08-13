@@ -16,6 +16,10 @@ class App extends Component {
 
   componentDidMount() {
     this.logIn();
+
+    if ('Notification' in window) {
+      Notification.requestPermission();
+    }
   }
 
   logIn = () => {
