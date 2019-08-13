@@ -1,9 +1,14 @@
 const spawnNotification = (body, title) => {
-  const options = {
-      body: body,
-  };
-  const notification = new Notification(title, options);
-  setTimeout(notification.close.bind(notification), 4000);
+  Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+      navigator.serviceWorker.ready.then(function(registration) {
+        registration.showNotification(title, {
+          body: body,
+          vibrate: [200, 100, 200, 100, 200, 100, 200],
+        });
+      });
+    }
+  });
 }
 
 export default spawnNotification;

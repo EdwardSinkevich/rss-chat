@@ -6,7 +6,7 @@ import ChatMessages from '../components/chatMessages';
 import ChatControls from '../components/chatControls';
 import { receiveMessage, logOut, changeVisibility } from '../actions';
 import setUpSocket from '../services/socket';
-import notifications from '../services/notifications'
+import notifications from '../services/notifications';
 
 import { withStyles } from '@material-ui/styles';
 

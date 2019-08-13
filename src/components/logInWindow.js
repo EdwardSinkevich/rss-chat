@@ -11,7 +11,7 @@ const LogInWindow = ({value, onChange, logIn, open}) => {
   return (
     <div>
       <Dialog open={open} disableBackdropClick={true}>
-        <DialogTitle id="form-dialog-title">Enter the name to join</DialogTitle>
+        <DialogTitle id="form-dialog-title">Enter your name to join</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
