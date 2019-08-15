@@ -95,9 +95,9 @@ class Chat extends Component {
         from: userName,
         message: inputMessage,
       }));
+    } else {
+      cacheMessage(userName, inputMessage);
     }
-
-    cacheMessage(userName, inputMessage);
 
     this.setState({
       inputMessage: '',

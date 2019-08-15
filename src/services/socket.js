@@ -1,10 +1,11 @@
-const setUpSocket = (receiveMessage, sendCachedMessages) => {
+const setUpSocket = (receiveMessage, sendCachedMessages, onReconnect) => {
   let socket;
 
   const connectSocket = () => {
     socket = new WebSocket('wss://wssproxy.herokuapp.com/');
 
     socket.onopen = () => {
+      onReconnect(socket);
       sendCachedMessages();
     }
 

@@ -25,9 +25,13 @@ class App extends Component {
     inputName: localStorage.getItem('userName') || '',
   }
 
-  setUpSocket() {
+  setUpSocket = () => {
     const { receiveMessage } = this.props;
-    this.socket = setUpSocket(receiveMessage, this.sendCachedMessages);
+    this.socket = setUpSocket(receiveMessage, this.sendCachedMessages, this.onReconnect);
+  }
+
+  onReconnect = (socket) => {
+    this.socket = socket;
   }
 
   componentDidMount() {
