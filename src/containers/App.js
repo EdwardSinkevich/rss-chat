@@ -23,15 +23,18 @@ const mapDispatchToProps = dispatch => ({
 class App extends Component {
   state = {
     inputName: localStorage.getItem('userName') || '',
+    socket: null,
   }
 
   setUpSocket = () => {
     const { receiveMessage } = this.props;
-    this.socket = setUpSocket(receiveMessage, this.sendCachedMessages, this.onReconnect);
+    this.setState({socket: setUpSocket(receiveMessage, this.onReconnect)});
   }
 
   onReconnect = (socket) => {
-    this.socket = socket;
+    this.setState({socket: socket});
+
+    this.sendCachedMessages();
   }
 
   componentDidMount() {
@@ -68,14 +71,15 @@ class App extends Component {
       inputName: e.target.value,
     })
   }
-
+  
   sendCachedMessages = () => {
+    const { socket } = this.state;
     const { cachedMessages, clearCacheMessage } = this.props;
 
-    if (this.socket.readyState === 1) {
+    if (socket.readyState === 1) {
       cachedMessages.forEach(element => {
-        this.socket.send(JSON.stringify({
-          from: element.fromUser,
+        socket.send(JSON.stringify({
+          from: element.from,
           message: element.message,
         }));
       });
@@ -91,7 +95,7 @@ class App extends Component {
     return (
       <>
         <main>
-          <Chat socket={this.socket} />
+          <Chat socket={this.state.socket} />
         </main>
         <LogInWindow 
           onChange={this.handleInputName} 

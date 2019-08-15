@@ -37,11 +37,12 @@ const styles = () => ({
 });
 
 const mapStateToProps = (state) => {
-  const { messages, userSession, documentVisibility } = state;
+  const { messages, userSession, documentVisibility, offlineMessages } = state;
   return { 
     dataMessages: messages,
     userName: userSession,
     isHidden: documentVisibility,
+    cachedMessages: offlineMessages,
   }
 }
 
@@ -147,7 +148,7 @@ class Chat extends Component {
 
   render() {
     const { inputMessage } = this.state;
-    const { dataMessages, classes, userName } = this.props;
+    const { dataMessages, classes, userName, cachedMessages } = this.props;
 
     return (
       <div className={classes.chatRoot}>
@@ -157,6 +158,7 @@ class Chat extends Component {
           scrollTo={this.scrollToElement}
           userName={userName}
           messagesContainer={this.messagesContainer}
+          cachedMessages={cachedMessages}
         />
         <ChatControls
           onChange={this.handleInputMessage}

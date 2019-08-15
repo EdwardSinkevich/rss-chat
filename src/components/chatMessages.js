@@ -98,6 +98,12 @@ const useStyles = makeStyles(() => ({
     marginBottom: '15px',
   },
 
+  cachedMessage: {
+    background: 'red',
+    '&:after': {
+      borderLeftColor: 'red',
+    },
+  },
   
   '@keyframes slideFromLeft': {
     '0%': {
@@ -125,7 +131,7 @@ const useStyles = makeStyles(() => ({
 }));
     
 
-const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer }) => {
+const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer, cachedMessages }) => {
   const styles = useStyles();
 
   return (
@@ -151,6 +157,17 @@ const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer }) =
                   </div>
                 </li>
               )
+          })
+        }
+        {
+          cachedMessages.map(({message}, index) => {
+            return (
+              <li key={index} className={`${styles.message} ${styles.messagesRight}`}>
+                <div className={`${styles.textBubble} ${styles.textBubbleRight} ${styles.cachedMessage}`}>
+                  {message}
+                </div>
+              </li>
+            )
           })
         }
         <div className={styles.scrollElement} ref={scrollTo} />

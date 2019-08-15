@@ -1,4 +1,4 @@
-const setUpSocket = (receiveMessage, sendCachedMessages, onReconnect) => {
+const setUpSocket = (receiveMessage, onReconnect) => {
   let socket;
 
   const connectSocket = () => {
@@ -6,7 +6,6 @@ const setUpSocket = (receiveMessage, sendCachedMessages, onReconnect) => {
 
     socket.onopen = () => {
       onReconnect(socket);
-      sendCachedMessages();
     }
 
     socket.onmessage = (event) => {
