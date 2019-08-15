@@ -1,10 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(() => ({
   chatHeader: {
     height: '60px',
-    background: '#00bcd4',
+    background: '#f0f8ff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+
+  logOutBtn: {
+    background: '#01BFA5',
+    color: 'white',
+    marginRight: '20px',
+    padding: '4px 8px',
   },
 }));
 
@@ -13,7 +24,7 @@ const ChatHeader = (props) => {
 
   return (
     <div className={styles.chatHeader}>
-      <button onClick={props.logOut}>LogOut</button>
+      <Button variant="contained" onClick={props.logOut} className={styles.logOutBtn}>LogOut</Button>
     </div>
   );
 }

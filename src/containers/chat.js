@@ -25,6 +25,15 @@ const styles = () => ({
     borderRadius: '9px',
     boxShadow: '0 0 60px rgba(0,0,0,0.5)',
   },
+
+  '@media (max-width: 780px)': {
+    chatRoot: {
+      top: '0',
+      width: '100%',
+      height: '100%',
+      borderRadius: '0',
+    },
+  },
 });
 
 const mapStateToProps = (state) => {
@@ -97,7 +106,8 @@ class Chat extends Component {
   }
 
   sendMessageOnKey = (e) => {
-    if(e.key === 'Enter') {
+    if(e.key === 'Enter') { 
+      e.preventDefault();
       this.sendMessage();
     }
   }
@@ -141,23 +151,21 @@ class Chat extends Component {
     const { dataMessages, classes, userName } = this.props;
 
     return (
-      <>
-        <div className={classes.chatRoot}>
-          <ChatHeader logOut={this.logOut} />
-          <ChatMessages
-            dataMessages={dataMessages}
-            scrollTo={this.scrollToElement}
-            userName={userName}
-            messagesContainer={this.messagesContainer}
-          />
-          <ChatControls
-            onChange={this.handleInputMessage}
-            value={inputMessage}
-            sendMessage={this.sendMessage}
-            sendMessageOnKey={this.sendMessageOnKey}
-          />
-        </div>
-      </>
+      <div className={classes.chatRoot}>
+        <ChatHeader logOut={this.logOut} />
+        <ChatMessages
+          dataMessages={dataMessages}
+          scrollTo={this.scrollToElement}
+          userName={userName}
+          messagesContainer={this.messagesContainer}
+        />
+        <ChatControls
+          onChange={this.handleInputMessage}
+          value={inputMessage}
+          sendMessage={this.sendMessage}
+          sendMessageOnKey={this.sendMessageOnKey}
+        />
+      </div>
     )
   }
 }

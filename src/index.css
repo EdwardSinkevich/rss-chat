@@ -1,9 +1,33 @@
 * {
   margin: 0;
   padding: 0;
+  border: 0;
+  outline: 0;
 }
 
 html {
-  font-family: "Roboto", sans-serif;
+  font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", Roboto, "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
   box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  background: #CAEDF3;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #01BFA5;
+  border-radius: 38px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(1, 191, 166, 0.7);
+}
+
+::-webkit-scrollbar-track {
+  opacity: 0;
 }
