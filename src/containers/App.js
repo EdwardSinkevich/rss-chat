@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import setUpSocket from '../services/socket';
 import Chat from './chat.js';
 import LogInWindow from '../components/logInWindow';
-import { logIn } from '../actions';
+import { receiveMessage, logIn, clearCacheMessage } from '../actions';
+
+const mapStateToProps = (state) => {
+  const { userSession, offlineMessages } = state;
+  return {
+    userName: userSession,
+    cachedMessages: offlineMessages,
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
+  receiveMessage: data => dispatch(receiveMessage(data)),
   logIn: (userName) => dispatch(logIn(userName)),
+  clearCacheMessage: () => dispatch(clearCacheMessage()),
 });
 
 class App extends Component {
@@ -14,7 +25,13 @@ class App extends Component {
     inputName: localStorage.getItem('userName') || '',
   }
 
+  setUpSocket() {
+    const { receiveMessage } = this.props;
+    this.socket = setUpSocket(receiveMessage, this.sendCachedMessages);
+  }
+
   componentDidMount() {
+    this.setUpSocket();
     this.logIn();
 
     if ('Notification' in window) {
@@ -35,10 +52,31 @@ class App extends Component {
     }
   }
 
+  logInOnKey = (e) => {
+    if(e.key === 'Enter') { 
+      e.preventDefault();
+      this.logIn();
+    }
+  }
+
   handleInputName = (e) => {
     this.setState({
       inputName: e.target.value,
     })
+  }
+
+  sendCachedMessages = () => {
+    const { cachedMessages, clearCacheMessage } = this.props;
+
+    if (this.socket.readyState === 1) {
+      cachedMessages.forEach(element => {
+        this.socket.send(JSON.stringify({
+          from: element.fromUser,
+          message: element.message,
+        }));
+      });
+      clearCacheMessage();
+    }
   }
 
   render() {
@@ -49,7 +87,7 @@ class App extends Component {
     return (
       <>
         <main>
-          <Chat />
+          <Chat socket={this.socket} />
         </main>
         <LogInWindow 
           onChange={this.handleInputName} 
@@ -57,12 +95,11 @@ class App extends Component {
           logIn={this.logIn}
           open={isExistName}
           handleClose={this.state.handleClose}
+          logInOnKey={this.logInOnKey}
           />
       </>
     );
   }
 }
 
-export default connect(state => ({
-  userName: state.userSession,
-}), mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

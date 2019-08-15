@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import ChatHeader from '../components/chatHeader';
 import ChatMessages from '../components/chatMessages';
 import ChatControls from '../components/chatControls';
-import { receiveMessage, logOut, changeVisibility } from '../actions';
-import setUpSocket from '../services/socket';
+import { logOut, changeVisibility, cacheMessage } from '../actions';
+
 import notifications from '../services/notifications';
 
 import { withStyles } from '@material-ui/styles';
@@ -37,7 +37,7 @@ const styles = () => ({
 });
 
 const mapStateToProps = (state) => {
-  const { messages, userSession, documentVisibility} = state;
+  const { messages, userSession, documentVisibility } = state;
   return { 
     dataMessages: messages,
     userName: userSession,
@@ -46,9 +46,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  receiveMessage: (data) => dispatch(receiveMessage(data)),
   logOut: () => dispatch(logOut()),
   changeVisibility: () => dispatch(changeVisibility()),
+  cacheMessage: (userName, message) => dispatch(cacheMessage(userName, message)),
 });
 
 class Chat extends Component {
@@ -66,8 +66,7 @@ class Chat extends Component {
 
 
   componentDidMount() {
-    const { receiveMessage, changeVisibility } = this.props;
-    this.socket = setUpSocket(receiveMessage);
+    const { changeVisibility } = this.props;
 
     window.addEventListener("visibilitychange", () => changeVisibility());
   }
@@ -85,24 +84,24 @@ class Chat extends Component {
 
   sendMessage = () => {
     const { inputMessage } = this.state;
-    const { userName, receiveMessage } = this.props;
+    const { socket, userName, cacheMessage } = this.props;
     
-    if (!userName) {
+    if (!userName || !inputMessage) {
       return;
     }
     
-    if (this.socket.readyState === 1) {
-      this.socket.send(JSON.stringify({
+    if (socket.readyState === 1) {
+      socket.send(JSON.stringify({
         from: userName,
         message: inputMessage,
       }));
-  
-      this.setState({
-        inputMessage: '',
-      })
-    } else if (this.socket.readyState === 3) {
-        this.socket = setUpSocket(receiveMessage);
     }
+
+    cacheMessage(userName, inputMessage);
+
+    this.setState({
+      inputMessage: '',
+    })
   }
 
   sendMessageOnKey = (e) => {
@@ -152,7 +151,7 @@ class Chat extends Component {
 
     return (
       <div className={classes.chatRoot}>
-        <ChatHeader logOut={this.logOut} />
+        <ChatHeader logOut={this.logOut} userName={userName}/>
         <ChatMessages
           dataMessages={dataMessages}
           scrollTo={this.scrollToElement}

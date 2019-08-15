@@ -2,3 +2,5 @@ export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 export const LOG_IN = 'LOG_IN';
 export const LOG_OUT = 'LOG_OUT';
 export const CHANGE_VISIBILITY = 'CHANGE_VISIBILITY';
+export const CACHE_MESSAGE = 'CACHE_MESSAGE';
+export const CLEAR_CACHE_MESSAGE = 'CLEAR_CACHE_MESSAGE';

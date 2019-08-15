@@ -5,7 +5,6 @@ const spawnNotification = (body, title) => {
         registration.showNotification(title, {
           body: body,
           vibrate: [200, 100, 200, 100, 200, 100, 200],
-          icon: '/assets/images/rss.png',
         });
       });
     }

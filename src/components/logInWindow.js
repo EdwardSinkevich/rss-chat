@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const LogInWindow = ({value, onChange, logIn, open}) => {
+const LogInWindow = ({value, onChange, logIn, logInOnKey, open}) => {
 
   return (
     <div>
@@ -21,6 +21,7 @@ const LogInWindow = ({value, onChange, logIn, open}) => {
             label="Your name"
             type="text"
             fullWidth
+            onKeyPress={logInOnKey}
           />
         </DialogContent>
         <DialogActions>

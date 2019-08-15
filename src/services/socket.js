@@ -1,8 +1,12 @@
-const setUpSocket = (receiveMessage) => {
+const setUpSocket = (receiveMessage, sendCachedMessages) => {
   let socket;
 
   const connectSocket = () => {
     socket = new WebSocket('wss://wssproxy.herokuapp.com/');
+
+    socket.onopen = () => {
+      sendCachedMessages();
+    }
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data).reverse();
@@ -10,7 +14,9 @@ const setUpSocket = (receiveMessage) => {
     }
 
     socket.onclose = () => {
-      connectSocket();
+      setTimeout(() => {
+        connectSocket();
+      }, 4000);
     };
   }
 

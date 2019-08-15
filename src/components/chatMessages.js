@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { makeStyles } from '@material-ui/core';
-import moment from 'moment';
+
+import MessageTimeReceipt from './messageTimeReceipt';
 
 const useStyles = makeStyles(() => ({
   messagesWrap: {
@@ -37,7 +38,8 @@ const useStyles = makeStyles(() => ({
   },
 
   textBubble: {
-		display: 'inline-block',
+    display: 'inline-flex',
+    flexDirection: 'column',
     hyphens: 'auto',
     padding: '7px 14px',
     position: 'relative',
@@ -88,13 +90,6 @@ const useStyles = makeStyles(() => ({
     color: '#01BFA5',
   },
 
-  time: {
-    fontSize: '12px',
-    marginLeft: '20px',
-    color: '#919191',
-    alignSelf: 'flex-end',
-  },
-
   timeRight: {
     color: '#FFFFFF',
   },
@@ -138,13 +133,12 @@ const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer }) =
       <ul className={styles.messagesList} ref={messagesContainer}>
         {
           dataMessages.map(({from, time, id, message}) => {
-            const date = moment(new Date(time)).calendar();
             if (from === userName) {
               return (
                 <li key={id} className={`${styles.message} ${styles.messagesRight}`}>
                   <div className={`${styles.textBubble} ${styles.textBubbleRight}`}>
                     {message}
-                    <span className={`${styles.time} ${styles.timeRight}`}>{date}</span>
+                    <MessageTimeReceipt time={time} className={styles.timeRight} />
                   </div>
                 </li>
               )
@@ -153,7 +147,7 @@ const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer }) =
                   <div className={styles.textBubble}>
                     <p className={styles.nickName}>{from}</p>
                     {message}
-                    <span className={styles.time}>{date}</span>
+                    <MessageTimeReceipt time={time} />
                   </div>
                 </li>
               )
