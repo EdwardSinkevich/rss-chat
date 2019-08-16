@@ -6,23 +6,23 @@ const setUpSocket = (receiveMessage, onReconnect) => {
 
     socket.onopen = () => {
       onReconnect(socket);
-    }
+    };
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data).reverse();
       receiveMessage(data);
-    }
+    };
 
     socket.onclose = () => {
       setTimeout(() => {
         connectSocket();
       }, 4000);
     };
-  }
+  };
 
   connectSocket();
 
   return socket;
-}
+};
 
 export default setUpSocket;

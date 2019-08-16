@@ -7,6 +7,6 @@ const documentVisibility = (state = false, action) => {
     default:
       return state;
   }
-}
+};
 
 export default documentVisibility;

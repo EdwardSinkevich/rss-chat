@@ -12,11 +12,13 @@ const useStyles = makeStyles(() => ({
 
 const MessageTimeReceipt = ({ time, className }) => {
   const styles = useStyles();
-  const date = moment(new Date(time)).calendar();
+  const date = moment(time).calendar();
 
   return (
-    <span className={ className ? `${styles.time} ${className}` : styles.time }>{date}</span>
+    <span className={className ? `${styles.time} ${className}` : styles.time}>
+      {date}
+    </span>
   );
-}
+};
 
 export default MessageTimeReceipt;

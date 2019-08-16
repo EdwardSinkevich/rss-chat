@@ -23,11 +23,11 @@ const useStyles = makeStyles(() => ({
   },
 
   userNameLable: {
-    color: '#3d3d3d'
+    color: '#3d3d3d',
   },
 
   userName: {
-    color:'#FFFFFF',
+    color: '#FFFFFF',
   },
 
   logOutBtn: {
@@ -38,24 +38,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ChatHeader = ({logOut, userName}) => {
+const ChatHeader = ({ logOut, userName }) => {
   const styles = useStyles();
   if (userName) {
     return (
       <div className={styles.chatHeader}>
         <div className={styles.userNameWrap}>
-          <span className={styles.userNameLable}>
-            Your name:
-          </span>
-          <span className={styles.userName}>
-            {userName}
-          </span>
+          <span className={styles.userNameLable}>Your name:</span>
+          <span className={styles.userName}>{userName}</span>
         </div>
-        <Button variant="contained" onClick={logOut} className={styles.logOutBtn}>LogOut</Button>
+        <Button
+          variant="contained"
+          onClick={logOut}
+          className={styles.logOutBtn}
+        >
+          LogOut
+        </Button>
       </div>
     );
   }
-  return <div className={styles.chatHeader} />
-}
+  return <div className={styles.chatHeader} />;
+};
 
 export default ChatHeader;

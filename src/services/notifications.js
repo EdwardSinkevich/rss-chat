@@ -1,16 +1,22 @@
-const spawnNotification = (body, title) => {
-  if ('Notification' in window) {
-    Notification.requestPermission(function(result) {
-      if (result === 'granted') {
-        navigator.serviceWorker.ready.then(function(registration) {
-          registration.showNotification(title, {
-            body: body,
-            vibrate: [200, 100, 200, 100, 200, 100, 200],
-          });
-        });
-      }
-    });
-  }
-}
+export default class Notifications {
+  static requestNotificationsPermission = () => {
+    if ('Notification' in window) {
+      Notification.requestPermission();
+    }
+  };
 
-export default spawnNotification;
+  static spawnNotification = (body, title) => {
+    if ('Notification' in window) {
+      Notification.requestPermission((result) => {
+        if (result === 'granted') {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.showNotification(title, {
+              body,
+              vibrate: [200, 100, 200, 100, 200, 100, 200],
+            });
+          });
+        }
+      });
+    }
+  };
+}

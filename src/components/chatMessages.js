@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import MessageTimeReceipt from './messageTimeReceipt';
+import CachedMessages from './cachedMessages';
 
 const useStyles = makeStyles(() => ({
   messagesWrap: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(() => ({
     wordBreak: 'break-word',
   },
 
-  messageWrap:{
+  messageWrap: {
     display: 'flex',
     flexDirection: 'column',
   },
@@ -48,19 +49,19 @@ const useStyles = makeStyles(() => ({
     letterSpacing: '0.4px',
     margin: '5px 20px',
     borderRadius: '0.5em',
-		'&:after': {
-			content: '""',
-			position: 'absolute',
-			left: '0',
-			top: '50%',
-			width: '0',
-			height: '0',
-			border: '12px solid transparent',
-			borderRightColor: '#F2F2F2',
-			borderLeft: '0',
-			marginTop: ' -6px',
-			marginLeft: '-11px',
-			borderTop: '0'
+    '&:after': {
+      content: '""',
+      position: 'absolute',
+      left: '0',
+      top: '50%',
+      width: '0',
+      height: '0',
+      border: '12px solid transparent',
+      borderRightColor: '#F2F2F2',
+      borderLeft: '0',
+      marginTop: ' -6px',
+      marginLeft: '-11px',
+      borderTop: '0',
     },
   },
 
@@ -81,7 +82,7 @@ const useStyles = makeStyles(() => ({
       borderRight: '0',
       marginTop: ' -6px',
       marginRight: '-11px',
-      borderTop: '0'
+      borderTop: '0',
     },
   },
 
@@ -99,12 +100,10 @@ const useStyles = makeStyles(() => ({
   },
 
   cachedMessage: {
-    background: 'red',
-    '&:after': {
-      borderLeftColor: 'red',
-    },
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  
+
   '@keyframes slideFromLeft': {
     '0%': {
       transform: 'translateX(-100%)',
@@ -129,51 +128,59 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
-    
 
-const ChatMessages = ({ dataMessages, scrollTo, userName, messagesContainer, cachedMessages }) => {
+const ChatMessages = ({
+  dataMessages,
+  scrollTo,
+  userName,
+  messagesContainer,
+  cachedMessages,
+}) => {
   const styles = useStyles();
 
   return (
     <div className={styles.messagesWrap}>
       <ul className={styles.messagesList} ref={messagesContainer}>
-        {
-          dataMessages.map(({from, time, id, message}) => {
-            if (from === userName) {
-              return (
-                <li key={id} className={`${styles.message} ${styles.messagesRight}`}>
-                  <div className={`${styles.textBubble} ${styles.textBubbleRight}`}>
-                    {message}
-                    <MessageTimeReceipt time={time} className={styles.timeRight} />
-                  </div>
-                </li>
-              )
-            } else return (
-                <li key={id} className={styles.message}>
-                  <div className={styles.textBubble}>
-                    <p className={styles.nickName}>{from}</p>
-                    {message}
-                    <MessageTimeReceipt time={time} />
-                  </div>
-                </li>
-              )
-          })
-        }
-        {
-          cachedMessages.map(({message}, index) => {
-            return (
-              <li key={index} className={`${styles.message} ${styles.messagesRight}`}>
-                <div className={`${styles.textBubble} ${styles.textBubbleRight} ${styles.cachedMessage}`}>
-                  {message}
-                </div>
-              </li>
-            )
-          })
-        }
+        {dataMessages.map(({
+          from, time, id, message,
+        }) => (
+          <li
+            key={id}
+            className={
+              from === userName
+                ? `${styles.message} ${styles.messagesRight}`
+                : styles.message
+            }
+          >
+            <div
+              className={
+                from === userName
+                  ? `${styles.textBubble} ${styles.textBubbleRight}`
+                  : styles.textBubble
+              }
+            >
+              {from === userName ? null : (
+                <p className={styles.nickName}>{from}</p>
+              )}
+              {message}
+              <MessageTimeReceipt
+                time={time}
+                className={from === userName ? styles.timeRight : null}
+              />
+            </div>
+          </li>
+        ))}
+        <CachedMessages
+          cachedMessages={cachedMessages}
+          stylesMessage={`${styles.message} ${styles.messagesRight}`}
+          stylesTextBubble={`${styles.textBubble} ${styles.textBubbleRight} ${
+            styles.cachedMessage
+          } `}
+        />
         <div className={styles.scrollElement} ref={scrollTo} />
       </ul>
     </div>
   );
-}
+};
 
 export default memo(ChatMessages);

@@ -9,10 +9,14 @@ import App from './containers/App';
 import rootReducer from './reducers';
 import './index.css';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk)),
+);
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root'));
+  document.getElementById('root'),
+);

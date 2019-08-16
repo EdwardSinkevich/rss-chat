@@ -48,13 +48,15 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: 'rgba(1, 191, 166, 0.7)',
       transition: 'background 0s, color 0.135s',
-		},
+    },
   },
 }));
 
-const ChatControls = ({value, onChange, sendMessage, sendMessageOnKey }) => {
+const ChatControls = ({
+  value, onChange, sendMessage, sendMessageOnKey,
+}) => {
   const styles = useStyles();
-  
+
   return (
     <div className={styles.chatControls}>
       <div className={styles.inputAreaWrap}>
@@ -67,9 +69,11 @@ const ChatControls = ({value, onChange, sendMessage, sendMessageOnKey }) => {
           autoComplete="off"
         />
       </div>
-      <button className={styles.sendBtn} onClick={sendMessage}><Send fontSize='large' /></button>
+      <button className={styles.sendBtn} onClick={sendMessage}>
+        <Send fontSize="large" />
+      </button>
     </div>
   );
-}
+};
 
 export default ChatControls;

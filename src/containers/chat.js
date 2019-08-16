@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { withStyles } from '@material-ui/styles';
 import ChatHeader from '../components/chatHeader';
 import ChatMessages from '../components/chatMessages';
 import ChatControls from '../components/chatControls';
 import { logOut, changeVisibility, cacheMessage } from '../actions';
 
-import notifications from '../services/notifications';
+import Notifications from '../services/notifications';
 
-import { withStyles } from '@material-ui/styles';
 
 const styles = () => ({
   chatRoot: {
@@ -37,16 +37,18 @@ const styles = () => ({
 });
 
 const mapStateToProps = (state) => {
-  const { messages, userSession, documentVisibility, offlineMessages } = state;
-  return { 
+  const {
+    messages, userSession, documentVisibility, offlineMessages,
+  } = state;
+  return {
     dataMessages: messages,
     userName: userSession,
     isHidden: documentVisibility,
     cachedMessages: offlineMessages,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logOut: () => dispatch(logOut()),
   changeVisibility: () => dispatch(changeVisibility()),
   cacheMessage: (userName, message) => dispatch(cacheMessage(userName, message)),
@@ -65,94 +67,101 @@ class Chat extends Component {
     this.messagesContainer = React.createRef();
   }
 
-
   componentDidMount() {
     const { changeVisibility } = this.props;
 
-    window.addEventListener("visibilitychange", () => changeVisibility());
+    window.addEventListener('visibilitychange', () => changeVisibility());
   }
 
   handleInputMessage = (e) => {
     this.setState({
       inputMessage: e.target.value,
-    })
-  }
+    });
+  };
 
   logOut = () => {
     const { logOut } = this.props;
     logOut();
-  }
+  };
 
   sendMessage = () => {
     const { inputMessage } = this.state;
     const { socket, userName, cacheMessage } = this.props;
-    
+
     if (!userName || !inputMessage) {
       return;
     }
-    
+
     if (socket.readyState === 1) {
-      socket.send(JSON.stringify({
-        from: userName,
-        message: inputMessage,
-      }));
+      socket.send(
+        JSON.stringify({
+          from: userName,
+          message: inputMessage,
+        }),
+      );
     } else {
       cacheMessage(userName, inputMessage);
     }
 
     this.setState({
       inputMessage: '',
-    })
-  }
+    });
+  };
 
   sendMessageOnKey = (e) => {
-    if(e.key === 'Enter') { 
+    if (e.key === 'Enter') {
       e.preventDefault();
       this.sendMessage();
     }
-  }
+  };
 
   scrollToBottom = () => {
     const { wasFirstScroll, inputMessage } = this.state;
     const { dataMessages, userName } = this.props;
     const lastMessage = dataMessages[dataMessages.length - 1];
-    const scrollHeight = this.messagesContainer.current.scrollHeight;
-    const scrollTop = this.messagesContainer.current.scrollTop;
+    const { scrollHeight } = this.messagesContainer.current;
+    const { scrollTop } = this.messagesContainer.current;
     const messagesContainerHeight = this.messagesContainer.current.offsetHeight;
     const minimalScrollDistance = 100;
     const checkIfCanScroll = (lastMessage && lastMessage.from === userName && !inputMessage)
-    || (scrollHeight - scrollTop - messagesContainerHeight < minimalScrollDistance);
+      || scrollHeight - scrollTop - messagesContainerHeight
+        < minimalScrollDistance;
 
     if (dataMessages.length && !wasFirstScroll) {
-      this.setState({wasFirstScroll: true});
+      this.setState({ wasFirstScroll: true });
       this.scrollToElement.current.scrollIntoView();
     } else if (checkIfCanScroll) {
       this.scrollToElement.current.scrollIntoView();
     }
-  }
+  };
 
-  notify = (prevProps) => {
+  notify = (oldMessages) => {
     const { isHidden, dataMessages } = this.props;
     const lastMessage = dataMessages[dataMessages.length - 1];
 
-    if (isHidden && prevProps.dataMessages.length !== dataMessages.length) {
-      notifications(`message: ${lastMessage.message}`, `From: ${lastMessage.from}`);
+    if (isHidden && oldMessages.length !== dataMessages.length) {
+      Notifications.spawnNotification(
+        `message: ${lastMessage.message}`,
+        `From: ${lastMessage.from}`,
+      );
     }
-  }
+  };
 
   componentDidUpdate(prevProps) {
     this.scrollToBottom();
 
-    this.notify(prevProps);
+    this.notify(prevProps.dataMessages);
   }
 
   render() {
     const { inputMessage } = this.state;
-    const { dataMessages, classes, userName, cachedMessages } = this.props;
+    const {
+      dataMessages, classes, userName, cachedMessages,
+    } = this.props;
 
     return (
       <div className={classes.chatRoot}>
-        <ChatHeader logOut={this.logOut} userName={userName}/>
+        <ChatHeader logOut={this.logOut} userName={userName} />
         <ChatMessages
           dataMessages={dataMessages}
           scrollTo={this.scrollToElement}
@@ -167,8 +176,11 @@ class Chat extends Component {
           sendMessageOnKey={this.sendMessageOnKey}
         />
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Chat));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styles)(Chat));

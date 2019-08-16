@@ -2,13 +2,13 @@ import { LOG_IN, LOG_OUT } from '../constants';
 
 const userSession = (state = '', action) => {
   switch (action.type) {
-    case LOG_IN :
+    case LOG_IN:
       return action.payload;
-    case LOG_OUT :
+    case LOG_OUT:
       return '';
-    default :
+    default:
       return state;
   }
-}
+};
 
 export default userSession;
